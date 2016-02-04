@@ -1,9 +1,28 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     jcenter()
 }
 
 dependencies {
+    compile 'io.reactivex:rxjava:1.1.0'
+
     testCompile 'junit:junit:4.12'
+}
+
+//noinspection GroovyUnusedAssignment
+mainClassName = 'Main'
+
+run {
+    def execArgs = System.getProperty('exec.args')
+    if (execArgs) args execArgs.split()
 }
