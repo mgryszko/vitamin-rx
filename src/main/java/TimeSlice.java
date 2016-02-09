@@ -1,14 +1,21 @@
 import rx.Observable;
-import rx.Observer;
 import rx.Scheduler;
-import rx.observables.ConnectableObservable;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static rx.Observable.empty;
+import static rx.Observable.interval;
+import static rx.Observable.just;
 
 public class TimeSlice {
-    public void start(int durationInMin, Iterable<Observer<Long>> observers, Scheduler scheduler) {
-        ConnectableObservable<Long> timer = Observable.timer(durationInMin, MINUTES, scheduler).publish();
-        observers.forEach(timer::subscribe);
-        timer.connect();
+    public Observable<Event> start(int durationInSeconds, Scheduler scheduler) {
+        return interval(1, SECONDS, scheduler).take(durationInSeconds).concatMap(t -> {
+            if (t == 0) {
+                return just(Event.STARTED);
+            }
+            if (t == (durationInSeconds - 1)) {
+                return just(Event.ELAPSED);
+            }
+            return empty();
+        });
     }
 }

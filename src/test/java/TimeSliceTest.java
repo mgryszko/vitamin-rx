@@ -1,26 +1,22 @@
 import org.junit.Test;
-import rx.Observer;
+import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.Arrays.asList;
 
 public class TimeSliceTest {
     @Test
-    public void elapse_time_slice_no_events() {
-        TestSubscriber<Long> observer1 = new TestSubscriber<>();
-        TestSubscriber<Long> observer2 = new TestSubscriber<>();
-        List<Observer<Long>> observers = asList(observer1, observer2);
+    public void elapse_time_slice_start_end_event() {
+        TestSubscriber<Event> eventObserver = new TestSubscriber<>();
 
-        new TimeSlice().start(duration, observers, scheduler);
+        Observable<Event> timeSlice = new TimeSlice().start(duration, scheduler);
 
-        scheduler.advanceTimeBy(duration, TimeUnit.MINUTES);
-        observer1.assertCompleted();
-        observer2.assertCompleted();
+        timeSlice.subscribe(eventObserver);
+        scheduler.advanceTimeBy(duration, TimeUnit.SECONDS);
+        eventObserver.assertValues(Event.STARTED, Event.ELAPSED);
+        eventObserver.assertCompleted();
     }
 
     private int duration = 10;
