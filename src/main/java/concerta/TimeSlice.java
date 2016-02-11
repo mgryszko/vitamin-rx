@@ -3,20 +3,24 @@ package concerta;
 import rx.Observable;
 import rx.Scheduler;
 
-import static concerta.Event.ELAPSED;
-import static concerta.Event.STARTED;
+import static concerta.Event.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static rx.Observable.empty;
-import static rx.Observable.interval;
-import static rx.Observable.just;
+import static rx.Observable.*;
 
 public class TimeSlice {
     public Observable<Event> start(int durationInSeconds, Scheduler scheduler) {
-        return interval(1, SECONDS, scheduler).take(durationInSeconds).concatMap(t -> {
-            if (t == 0) {
+        return start(durationInSeconds, Integer.MAX_VALUE, scheduler);
+    }
+
+    public Observable<Event> start(int durationInSeconds, int i, Scheduler scheduler) {
+        return interval(1, SECONDS, scheduler).map(t -> t + 1).take(durationInSeconds).concatMap(t -> {
+            if (t == 1) {
                 return just(STARTED);
             }
-            if (t == (durationInSeconds - 1)) {
+            if (t % i == 0) {
+                return just(IN_PROGRESS);
+            }
+            if (t == durationInSeconds) {
                 return just(ELAPSED);
             }
             return empty();

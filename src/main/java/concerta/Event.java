@@ -1,5 +1,5 @@
 package concerta;
 
 public enum Event {
-    STARTED, ELAPSED
+    STARTED, IN_PROGRESS, ELAPSED
 }
