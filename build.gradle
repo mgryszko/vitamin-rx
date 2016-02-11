@@ -20,7 +20,7 @@ dependencies {
 }
 
 //noinspection GroovyUnusedAssignment
-mainClassName = 'Main'
+mainClassName = 'concerta.Main'
 
 run {
     def execArgs = System.getProperty('exec.args')

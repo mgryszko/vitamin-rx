@@ -1,10 +1,14 @@
+package concerta;
+
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
-import java.util.concurrent.TimeUnit;
+import static concerta.Event.ELAPSED;
+import static concerta.Event.STARTED;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimeSliceTest {
     @Test
@@ -14,8 +18,8 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice().start(duration, scheduler);
 
         timeSlice.subscribe(eventObserver);
-        scheduler.advanceTimeBy(duration, TimeUnit.SECONDS);
-        eventObserver.assertValues(Event.STARTED, Event.ELAPSED);
+        scheduler.advanceTimeBy(duration, SECONDS);
+        eventObserver.assertValues(STARTED, ELAPSED);
         eventObserver.assertCompleted();
     }
 

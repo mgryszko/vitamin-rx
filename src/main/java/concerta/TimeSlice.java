@@ -1,6 +1,10 @@
+package concerta;
+
 import rx.Observable;
 import rx.Scheduler;
 
+import static concerta.Event.ELAPSED;
+import static concerta.Event.STARTED;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static rx.Observable.empty;
 import static rx.Observable.interval;
@@ -10,10 +14,10 @@ public class TimeSlice {
     public Observable<Event> start(int durationInSeconds, Scheduler scheduler) {
         return interval(1, SECONDS, scheduler).take(durationInSeconds).concatMap(t -> {
             if (t == 0) {
-                return just(Event.STARTED);
+                return just(STARTED);
             }
             if (t == (durationInSeconds - 1)) {
-                return just(Event.ELAPSED);
+                return just(ELAPSED);
             }
             return empty();
         });
