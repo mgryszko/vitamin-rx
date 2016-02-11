@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimeSliceTest {
     @Test
-    public void elapse_time_slice_start_end_event() {
+    public void elapse_time_slice_start_end_events() {
         TestSubscriber<Event> eventObserver = new TestSubscriber<>();
 
         Observable<Event> timeSlice = new TimeSlice().start(duration, scheduler);
