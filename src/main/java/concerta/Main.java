@@ -1,7 +1,6 @@
 package concerta;
 
 import org.kohsuke.args4j.*;
-import rx.functions.Action1;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
@@ -25,12 +24,13 @@ public final class Main {
     private void doMain(String... args) {
         parseArgs(args);
 
-        Action1<Event> display = System.out::println;
+        EventMessageFormatter formatter = new EventMessageFormatter();
         new TimeSlice()
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)
             .start(duration)
-            .doOnNext(display)
+            .doOnNext(new ConsoleNotifier(formatter))
+            .doOnNext(new GrowlNotifier(formatter))
             .subscribe();
     }
 

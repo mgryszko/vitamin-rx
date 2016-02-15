@@ -1,5 +1,7 @@
 ## TODO
 
+### Functional
+
 Time slice events:
 
 * was paused - one-time
@@ -15,12 +17,15 @@ Actions:
 
 * play sound
 * speak
-* display (notify via Growl)
 * dim screen (only for has elapsed)
 
-Code:
+### Technical
 
-* usage of some magic number/values to indicate nothing
+* Pass std streams to notifiers
+* Rename Event.STARTED to STARTING
+* Add time to IN_PROGRESS and ELAPSES_IN
+* Usage of some magic number/values to indicate not configured
+* Draw nice icon in Growl notification
 
 ## DONE
 
@@ -30,3 +35,7 @@ Time slice events:
 * in progress - periodic, every n minutes
 * will elapse soon - repeated, warn me: 10, 5, 3, 1 minutes before time elapses
 * has elapsed - one-time
+
+Actions:
+
+* display GUI notification
