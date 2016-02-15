@@ -21,6 +21,7 @@ Actions:
 
 ### Technical
 
+* Separate command line parser from Main
 * Pass std streams to notifiers
 * Rename Event.STARTED to STARTING
 * Add time to IN_PROGRESS and ELAPSES_IN

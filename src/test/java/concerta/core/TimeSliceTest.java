@@ -1,12 +1,14 @@
-package concerta;
+package concerta.core;
 
+import concerta.core.Event;
+import concerta.core.TimeSlice;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
-import static concerta.Event.*;
+import static concerta.core.Event.*;
 
 public class TimeSliceTest {
     @Test

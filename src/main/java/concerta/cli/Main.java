@@ -1,5 +1,9 @@
-package concerta;
+package concerta.cli;
 
+import concerta.core.TimeSlice;
+import concerta.notification.ConsoleNotifier;
+import concerta.notification.EventMessageFormatter;
+import concerta.notification.GrowlNotifier;
 import org.kohsuke.args4j.*;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})

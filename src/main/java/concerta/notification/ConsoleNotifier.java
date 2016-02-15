@@ -1,5 +1,6 @@
-package concerta;
+package concerta.notification;
 
+import concerta.core.Event;
 import rx.functions.Action1;
 
 public class ConsoleNotifier implements Action1<Event> {

@@ -1,4 +1,4 @@
-package concerta;
+package concerta.cli;
 
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionDef;

@@ -1,4 +1,4 @@
-package concerta;
+package concerta.core;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import static concerta.Event.*;
+import static concerta.core.Event.*;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static rx.Observable.*;

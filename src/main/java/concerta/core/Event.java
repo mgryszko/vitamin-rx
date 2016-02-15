@@ -1,4 +1,4 @@
-package concerta;
+package concerta.core;
 
 @SuppressWarnings("WeakerAccess")
 public enum Event {

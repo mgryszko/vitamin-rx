@@ -1,7 +1,11 @@
-package concerta;
+package concerta.notification;
+
+import concerta.core.Event;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static concerta.core.Event.*;
 
 public class EventMessageFormatter {
     private Map<Event, String> eventMessages = new HashMap<>();
@@ -11,10 +15,10 @@ public class EventMessageFormatter {
     }
 
     private void fillMessages() {
-        eventMessages.put(Event.STARTED, "Starting time slice - %d min");
-        eventMessages.put(Event.IN_PROGRESS, "%d min left");
-        eventMessages.put(Event.WILL_ELAPSE_SOON, "%d min to go");
-        eventMessages.put(Event.ELAPSED, "Time slice elapsed - %d min");
+        eventMessages.put(STARTED, "Starting time slice - %d min");
+        eventMessages.put(IN_PROGRESS, "%d min left");
+        eventMessages.put(WILL_ELAPSE_SOON, "%d min to go");
+        eventMessages.put(ELAPSED, "Time slice elapsed - %d min");
     }
 
     public String message(Event event) {
