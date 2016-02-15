@@ -59,7 +59,7 @@ public class TimeSlice {
         @Override
         public Observable<Event> call(Long t) {
             if (t == 1) {
-                return just(STARTED);
+                return just(STARTING);
             }
             if (t == duration) {
                 return just(ELAPSED);

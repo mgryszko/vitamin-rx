@@ -1,7 +1,5 @@
 package concerta.core;
 
-import concerta.core.Event;
-import concerta.core.TimeSlice;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -16,7 +14,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, STARTED, ELAPSED);
+        eventsObservedAfter(duration, STARTING, ELAPSED);
         eventObserver.assertCompleted();
     }
 
@@ -26,7 +24,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(2 * inProgressPeriod, STARTED, IN_PROGRESS, IN_PROGRESS);
+        eventsObservedAfter(2 * inProgressPeriod, STARTING, IN_PROGRESS, IN_PROGRESS);
     }
 
     @Test
@@ -34,7 +32,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(5, 3, 1).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, STARTED, WILL_ELAPSE_SOON, WILL_ELAPSE_SOON, WILL_ELAPSE_SOON, ELAPSED);
+        eventsObservedAfter(duration, STARTING, WILL_ELAPSE_SOON, WILL_ELAPSE_SOON, WILL_ELAPSE_SOON, ELAPSED);
     }
 
     private int duration = 10;

@@ -15,7 +15,7 @@ public class EventMessageFormatter {
     }
 
     private void fillMessages() {
-        eventMessages.put(STARTED, "Starting time slice - %d min");
+        eventMessages.put(STARTING, "Starting time slice - %d min");
         eventMessages.put(IN_PROGRESS, "%d min left");
         eventMessages.put(WILL_ELAPSE_SOON, "%d min to go");
         eventMessages.put(ELAPSED, "Time slice elapsed - %d min");
