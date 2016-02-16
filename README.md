@@ -21,7 +21,6 @@ Actions:
 
 ### Technical
 
-* Pass std streams to notifiers
 * Add time to IN_PROGRESS and ELAPSES_IN
 * Usage of some magic number/values to indicate not configured
 * Draw nice icon in Growl notification

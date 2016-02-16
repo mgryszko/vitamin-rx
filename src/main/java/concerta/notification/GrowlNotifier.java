@@ -4,12 +4,15 @@ import concerta.core.Event;
 import rx.functions.Action1;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class GrowlNotifier implements Action1<Event> {
-    private EventMessageFormatter formatter;
+    private final EventMessageFormatter formatter;
+    private final PrintStream errorStream;
 
-    public GrowlNotifier(EventMessageFormatter formatter) {
+    public GrowlNotifier(EventMessageFormatter formatter, PrintStream errorStream) {
         this.formatter = formatter;
+        this.errorStream = errorStream;
     }
 
     @Override
@@ -17,7 +20,7 @@ public class GrowlNotifier implements Action1<Event> {
         try {
             new ProcessBuilder("growlnotify", "-m", formatter.message(event)).start();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            errorStream.println(e.getMessage());
         }
     }
 }

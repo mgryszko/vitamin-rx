@@ -33,8 +33,8 @@ public final class Main {
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)
             .start(duration)
-            .doOnNext(new ConsoleNotifier(formatter))
-            .doOnNext(new GrowlNotifier(formatter))
+            .doOnNext(new ConsoleNotifier(formatter, System.out))
+            .doOnNext(new GrowlNotifier(formatter, System.err))
             .subscribe();
     }
 }

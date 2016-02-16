@@ -3,15 +3,19 @@ package concerta.notification;
 import concerta.core.Event;
 import rx.functions.Action1;
 
-public class ConsoleNotifier implements Action1<Event> {
-    private EventMessageFormatter formatter;
+import java.io.PrintStream;
 
-    public ConsoleNotifier(EventMessageFormatter formatter) {
+public class ConsoleNotifier implements Action1<Event> {
+    private final EventMessageFormatter formatter;
+    private final PrintStream outStream;
+
+    public ConsoleNotifier(EventMessageFormatter formatter, PrintStream outStream) {
         this.formatter = formatter;
+        this.outStream = outStream;
     }
 
     @Override
     public void call(Event event) {
-        System.out.println(formatter.message(event));
+        outStream.println(formatter.message(event));
     }
 }
