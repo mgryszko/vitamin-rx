@@ -1,14 +1,15 @@
 package concerta.notification;
 
 import concerta.core.Event;
+import concerta.core.EventType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static concerta.core.Event.*;
+import static concerta.core.EventType.*;
 
 public class EventMessageFormatter {
-    private Map<Event, String> eventMessages = new HashMap<>();
+    private Map<EventType, String> eventMessages = new HashMap<>();
 
     public EventMessageFormatter() {
         fillMessages();
@@ -22,6 +23,6 @@ public class EventMessageFormatter {
     }
 
     public String message(Event event) {
-        return eventMessages.get(event);
+        return eventMessages.get(event.getType());
     }
 }

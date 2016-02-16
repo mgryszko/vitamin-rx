@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import static concerta.core.Event.*;
+import static concerta.core.EventType.*;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static rx.Observable.*;
@@ -59,16 +59,16 @@ public class TimeSlice {
         @Override
         public Observable<Event> call(Long t) {
             if (t == 1) {
-                return just(STARTING);
+                return just(new Event(STARTING));
             }
             if (t == duration) {
-                return just(ELAPSED);
+                return just(new Event(ELAPSED));
             }
             if (willElapseSoon(t)) {
-                return just(WILL_ELAPSE_SOON);
+                return just(new Event(WILL_ELAPSE_SOON));
             }
             if (inProgress(t)) {
-                return just(IN_PROGRESS);
+                return just(new Event(IN_PROGRESS));
             }
             return empty();
         }
