@@ -26,7 +26,7 @@ public final class Main {
 
     @SuppressWarnings("LawOfDemeter")
     private void doMain(String... args) {
-        parseArgs(args);
+        new ArgsParser(this, System.err).parse(args);
 
         EventMessageFormatter formatter = new EventMessageFormatter();
         new TimeSlice()
@@ -36,28 +36,5 @@ public final class Main {
             .doOnNext(new ConsoleNotifier(formatter))
             .doOnNext(new GrowlNotifier(formatter))
             .subscribe();
-    }
-
-    private void parseArgs(String... args) {
-        CmdLineParser parser = createCmdLineParser();
-        try {
-            parser.parseArgument(args);
-        } catch (CmdLineException e) {
-            printErrorAndUsage(parser, e);
-            System.exit(1);
-        }
-    }
-
-    private CmdLineParser createCmdLineParser() {
-        ParserProperties parserProperties = ParserProperties.defaults()
-            .withShowDefaults(false)
-            .withOptionValueDelimiter("=");
-        return new CmdLineParser(this, parserProperties);
-    }
-
-    private void printErrorAndUsage(CmdLineParser parser, CmdLineException e) {
-        System.err.println(e.getMessage());
-        System.err.println();
-        parser.printUsage(System.err);
     }
 }
