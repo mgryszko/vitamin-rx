@@ -14,7 +14,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, new Event(STARTING), new Event(ELAPSED));
+        eventsObservedAfter(duration, new Event(STARTING, 1), new Event(ELAPSED, 10));
         eventObserver.assertCompleted();
     }
 
@@ -24,7 +24,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(2 * inProgressPeriod, new Event(STARTING), new Event(IN_PROGRESS), new Event(IN_PROGRESS));
+        eventsObservedAfter(2 * inProgressPeriod, new Event(STARTING, 1), new Event(IN_PROGRESS, 2), new Event(IN_PROGRESS, 4));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(5, 3, 1).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, new Event(STARTING), new Event(WILL_ELAPSE_SOON), new Event(WILL_ELAPSE_SOON), new Event(WILL_ELAPSE_SOON), new Event(ELAPSED));
+        eventsObservedAfter(duration, new Event(STARTING, 1), new Event(WILL_ELAPSE_SOON, 5), new Event(WILL_ELAPSE_SOON, 7), new Event(WILL_ELAPSE_SOON, 9), new Event(ELAPSED, 10));
     }
 
     private int duration = 10;

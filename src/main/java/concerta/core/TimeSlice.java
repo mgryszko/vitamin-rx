@@ -43,13 +43,14 @@ public class TimeSlice {
         return everyOneUnitUpTo(duration).concatMap(new ToEvent(duration));
     }
 
-    private Observable<Long> everyOneUnitUpTo(int duration) {
+    private Observable<Integer> everyOneUnitUpTo(int duration) {
         return interval(1, UNIT, scheduler)
+            .map(Math::toIntExact)
             .map(t -> t + 1)
             .take(duration);
     }
 
-    private class ToEvent implements Func1<Long, Observable<Event>>  {
+    private class ToEvent implements Func1<Integer, Observable<Event>>  {
         private final int duration;
 
         public ToEvent(int duration) {
@@ -57,18 +58,18 @@ public class TimeSlice {
         }
 
         @Override
-        public Observable<Event> call(Long t) {
+        public Observable<Event> call(Integer t) {
             if (t == 1) {
-                return just(new Event(STARTING));
+                return just(new Event(STARTING, t));
             }
             if (t == duration) {
-                return just(new Event(ELAPSED));
+                return just(new Event(ELAPSED, t));
             }
             if (willElapseSoon(t)) {
-                return just(new Event(WILL_ELAPSE_SOON));
+                return just(new Event(WILL_ELAPSE_SOON, t));
             }
             if (inProgress(t)) {
-                return just(new Event(IN_PROGRESS));
+                return just(new Event(IN_PROGRESS, t));
             }
             return empty();
         }
