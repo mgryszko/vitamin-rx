@@ -14,7 +14,6 @@ import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static rx.Observable.*;
 
-@SuppressWarnings("WeakerAccess")
 public class TimeSlice {
     public static final TimeUnit UNIT = SECONDS;
 

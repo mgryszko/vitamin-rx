@@ -10,7 +10,7 @@ class ArgsParser {
     private final CmdLineParser parser;
     private final PrintStream errorStream;
 
-    ArgsParser(Object target, PrintStream errorStream) {
+    public ArgsParser(Object target, PrintStream errorStream) {
         this.errorStream = errorStream;
         parser = createCmdLineParser(target);
     }
