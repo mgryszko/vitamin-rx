@@ -21,8 +21,8 @@ Actions:
 
 ### Technical
 
-* Add time to IN_PROGRESS and ELAPSES_IN
 * Use minutes as a basic time slice unit
+* Generate STARTING event on 0 time
 * Usage of some magic number/values to indicate not configured
 * Draw nice icon in Growl notification
 
