@@ -43,10 +43,9 @@ public class TimeSlice {
     }
 
     private Observable<Integer> everyOneUnitUpTo(int duration) {
-        return interval(1, UNIT, scheduler)
+        return interval(0, 1, UNIT, scheduler)
             .map(Math::toIntExact)
-            .map(t -> t + 1)
-            .take(duration);
+            .take(duration + 1);
     }
 
     private class ToEvent implements Func1<Integer, Observable<Event>>  {
@@ -58,7 +57,7 @@ public class TimeSlice {
 
         @Override
         public Observable<Event> call(Integer t) {
-            if (t == 1) {
+            if (t == 0) {
                 return just(new Event(STARTING, duration));
             }
             if (t == duration) {
