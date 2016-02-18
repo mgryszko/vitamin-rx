@@ -11,13 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 import static concerta.core.EventType.*;
 import static java.util.Arrays.asList;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static rx.Observable.*;
 
 public class TimeSlice {
-    public static final TimeUnit UNIT = SECONDS;
+    public static final TimeUnit DEFAULT_UNIT = MINUTES;
 
     private Scheduler scheduler = Schedulers.immediate();
+    private TimeUnit unit = DEFAULT_UNIT;
     private long inProgressPeriod = Integer.MAX_VALUE;
     private Collection<Integer> elapsesIn = Collections.emptyList();
 
@@ -26,6 +27,11 @@ public class TimeSlice {
 
     public TimeSlice(Scheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    public TimeSlice timeUnit(TimeUnit unit) {
+        this.unit = unit;
+        return this;
     }
 
     public TimeSlice inProgressEvery(int period) {
@@ -43,7 +49,7 @@ public class TimeSlice {
     }
 
     private Observable<Integer> everyOneUnitUpTo(int duration) {
-        return interval(0, 1, UNIT, scheduler)
+        return interval(0, 1, unit, scheduler)
             .map(Math::toIntExact)
             .take(duration + 1);
     }

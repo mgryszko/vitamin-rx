@@ -35,12 +35,12 @@ public class TimeSliceTest {
         eventsObservedAfter(duration, new Event(STARTING, duration), new Event(WILL_ELAPSE_SOON, 5), new Event(WILL_ELAPSE_SOON, 7), new Event(WILL_ELAPSE_SOON, 9), new Event(ELAPSED, duration));
     }
 
-    private int duration = 10;
+    private final int duration = 10;
     private TestScheduler scheduler = Schedulers.test();
     private TestSubscriber<Event> eventObserver = new TestSubscriber<>();
 
     private void eventsObservedAfter(int time, Event... expectedEvents) {
-        scheduler.advanceTimeBy(time, TimeSlice.UNIT);
+        scheduler.advanceTimeBy(time, TimeSlice.DEFAULT_UNIT);
         eventObserver.assertValues(expectedEvents);
     }
 }

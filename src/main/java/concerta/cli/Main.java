@@ -6,6 +6,8 @@ import concerta.notification.EventMessageFormatter;
 import concerta.notification.GrowlNotifier;
 import org.kohsuke.args4j.*;
 
+import java.util.concurrent.TimeUnit;
+
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
     @Option(name = "-p", aliases = "--progress", usage = "progress notification period")
@@ -13,6 +15,9 @@ public final class Main {
 
     @Option(name = "-e", aliases = "--elapse", usage = "elapses in", handler = MultiIntOptionHandler.class)
     private Integer[] elapsesIn;
+
+    @Option(name = "--seconds", hidden = true)
+    private boolean useSeconds;
 
     @Argument(required = true, usage = "duration")
     private int duration;
@@ -29,7 +34,9 @@ public final class Main {
         new ArgsParser(this, System.err).parse(args);
 
         EventMessageFormatter formatter = new EventMessageFormatter();
+        TimeUnit timeUnit = useSeconds ? TimeUnit.SECONDS : TimeSlice.DEFAULT_UNIT;
         new TimeSlice()
+            .timeUnit(timeUnit)
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)
             .start(duration)
