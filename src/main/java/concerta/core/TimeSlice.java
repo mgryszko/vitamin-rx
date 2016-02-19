@@ -5,12 +5,13 @@ import rx.Scheduler;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static concerta.core.EventType.*;
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static rx.Observable.*;
 
@@ -18,9 +19,9 @@ public class TimeSlice {
     public static final TimeUnit DEFAULT_UNIT = MINUTES;
 
     private Scheduler scheduler = Schedulers.immediate();
-    private TimeUnit unit = DEFAULT_UNIT;
+    private TimeUnit timeUnit = DEFAULT_UNIT;
     private long inProgressPeriod = Integer.MAX_VALUE;
-    private Collection<Integer> elapsesIn = Collections.emptyList();
+    private Collection<Integer> elapsesIn = emptyList();
 
     public TimeSlice() {
     }
@@ -30,7 +31,7 @@ public class TimeSlice {
     }
 
     public TimeSlice timeUnit(TimeUnit unit) {
-        this.unit = unit;
+        timeUnit = unit;
         return this;
     }
 
@@ -39,8 +40,8 @@ public class TimeSlice {
         return this;
     }
 
-    public TimeSlice elapsesIn(Integer... times) {
-        elapsesIn = asList(times);
+    public TimeSlice elapsesIn(List<Integer> times) {
+        elapsesIn = new ArrayList<>(times);
         return this;
     }
 
@@ -49,15 +50,15 @@ public class TimeSlice {
     }
 
     private Observable<Integer> everyOneUnitUpTo(int duration) {
-        return interval(0, 1, unit, scheduler)
+        return interval(0, 1, timeUnit, scheduler)
             .map(Math::toIntExact)
             .take(duration + 1);
     }
 
-    private class ToEvent implements Func1<Integer, Observable<Event>>  {
+    private final class ToEvent implements Func1<Integer, Observable<Event>>  {
         private final int duration;
 
-        public ToEvent(int duration) {
+        private ToEvent(int duration) {
             this.duration = duration;
         }
 

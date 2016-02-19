@@ -7,6 +7,7 @@ import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
 import static concerta.core.EventType.*;
+import static java.util.Arrays.asList;
 
 public class TimeSliceTest {
     @Test
@@ -24,15 +25,20 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(2 * inProgressPeriod, new Event(STARTING, duration), new Event(IN_PROGRESS, inProgressPeriod), new Event(IN_PROGRESS, 2 * inProgressPeriod));
+        eventsObservedAfter(2 * inProgressPeriod,
+            new Event(STARTING, duration),
+            new Event(IN_PROGRESS, inProgressPeriod), new Event(IN_PROGRESS, 2 * inProgressPeriod));
     }
 
     @Test
     public void will_elapse_soon_events_before_time_slice_end() {
-        Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(5, 3, 1).start(duration);
+        Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(asList(5, 3, 1)).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, new Event(STARTING, duration), new Event(WILL_ELAPSE_SOON, 5), new Event(WILL_ELAPSE_SOON, 7), new Event(WILL_ELAPSE_SOON, 9), new Event(ELAPSED, duration));
+        eventsObservedAfter(duration,
+            new Event(STARTING, duration),
+            new Event(WILL_ELAPSE_SOON, 5), new Event(WILL_ELAPSE_SOON, 7), new Event(WILL_ELAPSE_SOON, 9),
+            new Event(ELAPSED, duration));
     }
 
     private final int duration = 10;

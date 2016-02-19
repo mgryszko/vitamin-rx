@@ -8,7 +8,11 @@ import org.fusesource.jansi.AnsiConsole;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Collections.emptyList;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
@@ -16,7 +20,7 @@ public final class Main {
     private int inProgressPeriod = Integer.MAX_VALUE;
 
     @Option(name = "-e", aliases = "--elapse", usage = "elapses in", handler = MultiIntOptionHandler.class)
-    private Integer[] elapsesIn;
+    private List<Integer> elapsesIn = emptyList();
 
     @Option(name = "--seconds", hidden = true)
     private boolean useSeconds;
