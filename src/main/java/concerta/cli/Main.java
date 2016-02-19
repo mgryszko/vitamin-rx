@@ -4,7 +4,9 @@ import concerta.core.TimeSlice;
 import concerta.notification.ConsoleNotifier;
 import concerta.notification.EventMessageFormatter;
 import concerta.notification.GrowlNotifier;
-import org.kohsuke.args4j.*;
+import org.fusesource.jansi.AnsiConsole;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +34,7 @@ public final class Main {
     @SuppressWarnings("LawOfDemeter")
     private void doMain(String... args) {
         new ArgsParser(this, System.err).parse(args);
+        AnsiConsole.systemInstall();
 
         EventMessageFormatter formatter = new EventMessageFormatter();
         TimeUnit timeUnit = useSeconds ? TimeUnit.SECONDS : TimeSlice.DEFAULT_UNIT;
