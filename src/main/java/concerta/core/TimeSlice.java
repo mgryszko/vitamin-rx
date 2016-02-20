@@ -5,18 +5,19 @@ import rx.Scheduler;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static concerta.core.EventType.*;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Collections.emptyList;
-import static java.util.concurrent.TimeUnit.MINUTES;
 import static rx.Observable.*;
 
 public class TimeSlice {
-    public static final TimeUnit DEFAULT_UNIT = MINUTES;
+    public static final TimeUnit DEFAULT_UNIT = TimeUnit.MINUTES;
 
     private Scheduler scheduler = Schedulers.immediate();
     private TimeUnit timeUnit = DEFAULT_UNIT;
@@ -65,23 +66,26 @@ public class TimeSlice {
         @Override
         public Observable<Event> call(Integer t) {
             if (t == 0) {
-                return just(new Event(STARTING, duration));
+                return just(new Event(STARTING, Duration.of(duration, MINUTES)));
             }
             if (t == duration) {
-                return just(new Event(ELAPSED, duration));
+                return just(new Event(ELAPSED, Duration.of(duration, MINUTES)));
             }
             if (willElapseSoon(t)) {
-                return just(new Event(WILL_ELAPSE_SOON, t));
+                return just(new Event(WILL_ELAPSE_SOON, Duration.of(timeToGo(t), MINUTES)));
             }
             if (inProgress(t)) {
-                return just(new Event(IN_PROGRESS, t));
+                return just(new Event(IN_PROGRESS, Duration.of(t, MINUTES)));
             }
             return empty();
         }
 
         private boolean willElapseSoon(long t) {
-            long timeToGo = duration - t;
-            return elapsesIn.stream().anyMatch(e -> e == timeToGo);
+            return elapsesIn.stream().anyMatch(e -> e == timeToGo(t));
+        }
+
+        private long timeToGo(long t) {
+            return duration - t;
         }
 
         private boolean inProgress(long t) {

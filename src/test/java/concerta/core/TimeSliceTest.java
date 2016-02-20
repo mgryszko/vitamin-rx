@@ -6,7 +6,10 @@ import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
+import java.time.Duration;
+
 import static concerta.core.EventType.*;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 
 public class TimeSliceTest {
@@ -15,7 +18,9 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        eventsObservedAfter(duration, new Event(STARTING, duration), new Event(ELAPSED, duration));
+        eventsObservedAfter(duration,
+            new Event(STARTING, Duration.of(duration, MINUTES)),
+            new Event(ELAPSED, Duration.of(duration, MINUTES)));
         eventObserver.assertCompleted();
     }
 
@@ -26,8 +31,9 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         eventsObservedAfter(2 * inProgressPeriod,
-            new Event(STARTING, duration),
-            new Event(IN_PROGRESS, inProgressPeriod), new Event(IN_PROGRESS, 2 * inProgressPeriod));
+            new Event(STARTING, Duration.of(duration, MINUTES)),
+            new Event(IN_PROGRESS, Duration.of(inProgressPeriod, MINUTES)),
+            new Event(IN_PROGRESS, Duration.of(2 * inProgressPeriod, MINUTES)));
     }
 
     @Test
@@ -36,9 +42,11 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         eventsObservedAfter(duration,
-            new Event(STARTING, duration),
-            new Event(WILL_ELAPSE_SOON, 5), new Event(WILL_ELAPSE_SOON, 7), new Event(WILL_ELAPSE_SOON, 9),
-            new Event(ELAPSED, duration));
+            new Event(STARTING, Duration.of(duration, MINUTES)),
+            new Event(WILL_ELAPSE_SOON, Duration.of(5, MINUTES)),
+            new Event(WILL_ELAPSE_SOON, Duration.of(3, MINUTES)),
+            new Event(WILL_ELAPSE_SOON, Duration.of(1, MINUTES)),
+            new Event(ELAPSED, Duration.of(duration, MINUTES)));
     }
 
     private final int duration = 10;

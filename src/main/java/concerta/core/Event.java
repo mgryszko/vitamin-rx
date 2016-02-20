@@ -1,39 +1,45 @@
 package concerta.core;
 
+import java.time.Duration;
 import java.util.Objects;
 
-public class Event {
+public final class Event {
     private final EventType type;
-    private final int t;
+    private final Duration duration;
 
-    public Event(EventType type, int t) {
+    public Event(EventType type, Duration duration) {
         this.type = type;
-        this.t = t;
+        this.duration = duration;
     }
 
     public EventType getType() {
         return type;
     }
 
-    public int getTime() {
-        return t;
+    public Duration getDuration() {
+        return duration;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return type == event.type && t == event.t;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Event event = (Event) obj;
+        return type == event.type &&
+            Objects.equals(duration, event.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, t);
+        return Objects.hash(type, duration);
     }
 
     @Override
     public String toString() {
-        return type + "@" + t;
+        return type + "-" + duration;
     }
 }

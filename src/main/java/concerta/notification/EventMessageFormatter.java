@@ -16,13 +16,13 @@ public class EventMessageFormatter {
     }
 
     private void fillMessages() {
-        eventMessages.put(STARTING, "Starting time slice - %d min");
+        eventMessages.put(STARTING, "Starting time slice - %s min");
         eventMessages.put(IN_PROGRESS, "%s min left");
-        eventMessages.put(WILL_ELAPSE_SOON, "%d min to go");
-        eventMessages.put(ELAPSED, "Time slice elapsed - %d min");
+        eventMessages.put(WILL_ELAPSE_SOON, "%s min to go");
+        eventMessages.put(ELAPSED, "Time slice elapsed - %s min");
     }
 
     public String message(Event event) {
-        return String.format(eventMessages.get(event.getType()), event.getTime());
+        return String.format(eventMessages.get(event.getType()), event.getDuration().toMinutes());
     }
 }
