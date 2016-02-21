@@ -1,5 +1,6 @@
 package concerta.cli;
 
+import concerta.core.EventType;
 import concerta.core.TimeSlice;
 import concerta.notification.ConsoleNotifier;
 import concerta.notification.EventMessageFormatter;
@@ -8,9 +9,13 @@ import org.fusesource.jansi.AnsiConsole;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
@@ -39,12 +44,12 @@ public final class Main {
         AnsiConsole.systemInstall();
 
         EventMessageFormatter formatter = new EventMessageFormatter();
-        TimeUnit timeUnit = useSeconds ? TimeUnit.SECONDS : TimeSlice.DEFAULT_UNIT;
+        ChronoUnit unit = useSeconds ? SECONDS : MINUTES;
         new TimeSlice()
-            .timeUnit(timeUnit)
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)
-            .start(duration)
+            .start(Duration.of(duration, unit))
+            .filter(event -> event.getType() != EventType.TICK)
             .doOnNext(new ConsoleNotifier(formatter, System.out))
             .doOnNext(new GrowlNotifier(formatter, System.err))
             .subscribe();

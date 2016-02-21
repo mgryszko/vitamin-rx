@@ -24,6 +24,7 @@ Actions:
 
 * Usage of some magic number/values to indicate not configured
 * Draw nice icon in Growl notification
+* express duration as java.time.Duration
 
 ## DONE
 

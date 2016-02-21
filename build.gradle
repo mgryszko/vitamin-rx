@@ -19,6 +19,7 @@ dependencies {
     compile 'org.fusesource.jansi:jansi:1.11'
 
     testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
 //noinspection GroovyUnusedAssignment
