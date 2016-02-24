@@ -1,6 +1,5 @@
 package concerta.core;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -16,6 +15,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -34,8 +34,7 @@ public class TimeSliceTest {
         )));
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
-        List<Event> lastEvents = eventObserver.getOnNextEvents().stream().skip(eventObserver.getOnNextEvents().size() - 4).collect(toList());
-        assertThat(lastEvents, equalTo(asList(
+        assertThat(lastEvents(4), equalTo(asList(
             new Event(TICK, duration.minusSeconds(3)),
             new Event(TICK, duration.minusSeconds(2)),
             new Event(TICK, duration.minusSeconds(1)),
@@ -46,15 +45,15 @@ public class TimeSliceTest {
 
     @Test
     public void in_progress_events_of_time_slice() {
-        int inProgressPeriod = 2;
+        Duration inProgressPeriod = Duration.of(2, MINUTES);
         Observable<Event> timeSlice = new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        scheduler.advanceTimeBy(2 * inProgressPeriod, TimeUnit.MINUTES);
-        assertThat(eventObserver.getOnNextEvents().stream().filter(e -> e.getType() != TICK).collect(toList()), Matchers.contains(
+        scheduler.advanceTimeBy(2 * inProgressPeriod.toMinutes(), TimeUnit.MINUTES);
+        assertThat(allNonTickEvents(), contains(
             new Event(STARTING, duration),
-            new Event(IN_PROGRESS, Duration.of(inProgressPeriod, MINUTES)),
-            new Event(IN_PROGRESS, Duration.of(2 * inProgressPeriod, MINUTES))
+            new Event(IN_PROGRESS, inProgressPeriod),
+            new Event(IN_PROGRESS, inProgressPeriod.multipliedBy(2))
         ));
     }
 
@@ -64,7 +63,7 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
-        assertThat(eventObserver.getOnNextEvents().stream().filter(e -> e.getType() != TICK).collect(toList()), Matchers.contains(
+        assertThat(allNonTickEvents(), contains(
             new Event(STARTING, duration),
             new Event(WILL_ELAPSE_SOON, Duration.of(5, MINUTES)),
             new Event(WILL_ELAPSE_SOON, Duration.of(3, MINUTES)),
@@ -77,8 +76,11 @@ public class TimeSliceTest {
     private TestScheduler scheduler = Schedulers.test();
     private TestSubscriber<Event> eventObserver = new TestSubscriber<>();
 
-    private void eventsObservedAfter(int time, Event... expectedEvents) {
-        scheduler.advanceTimeBy(time, TimeSlice.DEFAULT_UNIT);
-        eventObserver.assertValues(expectedEvents);
+    private List<Event> lastEvents(int n) {
+        return eventObserver.getOnNextEvents().stream().skip(eventObserver.getOnNextEvents().size() - n).collect(toList());
+    }
+
+    private List<Event> allNonTickEvents() {
+        return eventObserver.getOnNextEvents().stream().filter(e -> e.getType() != TICK).collect(toList());
     }
 }

@@ -19,8 +19,8 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
-    @Option(name = "-p", aliases = "--progress", usage = "progress notification period")
-    private int inProgressPeriod = Integer.MAX_VALUE;
+    @Option(name = "-p", aliases = "--progress", usage = "progress notification period", handler = SimplifiedDurationHandler.class)
+    private Duration inProgressPeriod = Duration.ZERO;
 
     @Option(name = "-e", aliases = "--elapse", usage = "elapses in", handler = MultiIntOptionHandler.class)
     private List<Integer> elapsesIn = new ArrayList<>();

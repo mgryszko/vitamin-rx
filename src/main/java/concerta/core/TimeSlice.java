@@ -23,7 +23,7 @@ public class TimeSlice {
     public static final TimeUnit DEFAULT_UNIT = TimeUnit.MINUTES;
 
     private Scheduler scheduler = Schedulers.immediate();
-    private long inProgressPeriod = Integer.MAX_VALUE;
+    private Duration inProgressPeriod = Duration.ZERO;
     private Collection<Integer> elapsesIn = emptyList();
 
     public TimeSlice() {
@@ -33,7 +33,7 @@ public class TimeSlice {
         this.scheduler = scheduler;
     }
 
-    public TimeSlice inProgressEvery(int period) {
+    public TimeSlice inProgressEvery(Duration period) {
         inProgressPeriod = period;
         return this;
     }
@@ -85,8 +85,10 @@ public class TimeSlice {
             return duration.minusSeconds(t).get(SECONDS);
         }
 
+        // TODO extension method of duration
         private boolean inProgress(long t) {
-            return t % (inProgressPeriod * 60) == 0;
+            if (inProgressPeriod.equals(Duration.ZERO)) return false;
+            return t % inProgressPeriod.get(SECONDS) == 0;
         }
     }
 }
