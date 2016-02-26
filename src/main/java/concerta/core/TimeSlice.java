@@ -20,8 +20,6 @@ import static rx.Observable.interval;
 import static rx.Observable.just;
 
 public class TimeSlice {
-    public static final TimeUnit DEFAULT_UNIT = TimeUnit.MINUTES;
-
     private Scheduler scheduler = Schedulers.immediate();
     private Duration inProgressPeriod = Duration.ZERO;
     private Collection<Integer> elapsesIn = emptyList();
@@ -47,13 +45,13 @@ public class TimeSlice {
         return everyOneUnitUpTo(duration).concatMap(new ToEvent(duration));
     }
 
-    private Observable<Integer> everyOneUnitUpTo(Duration duration) {
+    private Observable<Duration> everyOneUnitUpTo(Duration duration) {
         return interval(0, 1, TimeUnit.SECONDS, scheduler)
-            .map(Math::toIntExact)
-            .take(toIntExact(duration.get(SECONDS) + 1));
+            .map(t -> Duration.of(t, SECONDS))
+            .take(toIntExact(duration.getSeconds() + 1));
     }
 
-    private final class ToEvent implements Func1<Integer, Observable<Event>>  {
+    private final class ToEvent implements Func1<Duration, Observable<Event>>  {
         private final Duration duration;
 
         private ToEvent(Duration duration) {
@@ -61,34 +59,39 @@ public class TimeSlice {
         }
 
         @Override
-        public Observable<Event> call(Integer t) {
-            if (t == 0) {
+        public Observable<Event> call(Duration t) {
+            if (t.equals(Duration.ZERO)) {
                 return just(new Event(STARTING, duration));
             }
-            if (t == duration.get(SECONDS)) {
+            if (t.equals(duration)) {
                 return just(new Event(ELAPSED, duration));
             }
             if (willElapseSoon(t)) {
-                return just(new Event(WILL_ELAPSE_SOON, Duration.of(timeToGo(t), SECONDS)));
+                return just(new Event(WILL_ELAPSE_SOON, timeToGo(t)));
             }
             if (inProgress(t)) {
-                return just(new Event(IN_PROGRESS, Duration.of(t / 60, MINUTES)));
+                return just(new Event(IN_PROGRESS, t));
             }
-            return just(new Event(TICK, Duration.of(t, SECONDS  )));
+            return just(new Event(TICK, t));
         }
 
-        private boolean willElapseSoon(long t) {
-            return elapsesIn.stream().anyMatch(e -> e * 60 == timeToGo(t));
+        private boolean willElapseSoon(Duration t) {
+            return elapsesIn.stream().anyMatch(e -> Duration.of(e, MINUTES).equals(timeToGo(t)));
         }
 
-        private long timeToGo(long t) {
-            return duration.minusSeconds(t).get(SECONDS);
+        private Duration timeToGo(Duration t) {
+            return duration.minus(t);
         }
 
-        // TODO extension method of duration
-        private boolean inProgress(long t) {
-            if (inProgressPeriod.equals(Duration.ZERO)) return false;
-            return t % inProgressPeriod.get(SECONDS) == 0;
+        private boolean inProgress(Duration t) {
+            if (inProgressPeriod.equals(Duration.ZERO)) {
+                return false;
+            }
+            return isMultipleOf(t, inProgressPeriod);
+        }
+
+        private boolean isMultipleOf(Duration d1, Duration d2) {
+            return d1.getSeconds() % d2.getSeconds() == 0;
         }
     }
 }
