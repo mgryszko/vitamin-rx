@@ -18,7 +18,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class SimplifiedDurationHandler extends OptionHandler<Duration> {
-    private static final Pattern PATTERN = Pattern.compile("([0-9])+([ms])?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN = Pattern.compile("([0-9]+)([ms])?", Pattern.CASE_INSENSITIVE);
     private static final int ONE_PARSED = 1;
 
     public SimplifiedDurationHandler(CmdLineParser parser, OptionDef option, Setter<? super Duration> setter) {
