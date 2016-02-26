@@ -59,7 +59,7 @@ public class TimeSliceTest {
 
     @Test
     public void will_elapse_soon_events_before_time_slice_end() {
-        Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(asList(5, 3, 1)).start(duration);
+        Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(asList(Duration.of(5, MINUTES), Duration.of(3, MINUTES), Duration.of(1, MINUTES))).start(duration);
         timeSlice.subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);

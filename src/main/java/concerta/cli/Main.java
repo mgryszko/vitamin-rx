@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -47,7 +48,7 @@ public final class Main {
         ChronoUnit unit = useSeconds ? SECONDS : MINUTES;
         new TimeSlice()
             .inProgressEvery(inProgressPeriod)
-            .elapsesIn(elapsesIn)
+            .elapsesIn(elapsesIn.stream().map(t -> Duration.of(t, MINUTES)).collect(Collectors.toList()))
             .start(Duration.of(duration, unit))
             .filter(event -> event.getType() != EventType.TICK)
             .doOnNext(new ConsoleNotifier(formatter, System.out))

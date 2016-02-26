@@ -6,14 +6,12 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static concerta.core.EventType.*;
 import static java.lang.Math.toIntExact;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Collections.emptyList;
 import static rx.Observable.interval;
@@ -22,7 +20,7 @@ import static rx.Observable.just;
 public class TimeSlice {
     private Scheduler scheduler = Schedulers.immediate();
     private Duration inProgressPeriod = Duration.ZERO;
-    private Collection<Integer> elapsesIn = emptyList();
+    private List<Duration> elapsesIn = emptyList();
 
     public TimeSlice() {
     }
@@ -36,8 +34,8 @@ public class TimeSlice {
         return this;
     }
 
-    public TimeSlice elapsesIn(List<Integer> times) {
-        elapsesIn = new ArrayList<>(times);
+    public TimeSlice elapsesIn(List<Duration> times) {
+        elapsesIn = Collections.unmodifiableList(times);
         return this;
     }
 
@@ -76,7 +74,7 @@ public class TimeSlice {
         }
 
         private boolean willElapseSoon(Duration t) {
-            return elapsesIn.stream().anyMatch(e -> Duration.of(e, MINUTES).equals(timeToGo(t)));
+            return elapsesIn.contains(timeToGo(t));
         }
 
         private Duration timeToGo(Duration t) {
