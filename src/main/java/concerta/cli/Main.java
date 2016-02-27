@@ -12,9 +12,6 @@ import org.kohsuke.args4j.Option;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 @SuppressWarnings({"UtilityClass", "UseOfSystemOutOrSystemErr", "FeatureEnvy", "CallToSystemExit"})
 public final class Main {
@@ -22,8 +19,8 @@ public final class Main {
         handler = SimplifiedDurationHandler.class)
     private Duration inProgressPeriod = Duration.ZERO;
 
-    @Option(name = "-e", aliases = "--elapse", usage = "elapses in", handler = MultiIntOptionHandler.class)
-    private List<Integer> elapsesIn = new ArrayList<>();
+    @Option(name = "-e", aliases = "--elapse", usage = "elapses in", handler = MultiDurationOptionHandler.class)
+    private List<Duration> elapsesIn = new ArrayList<>();
 
     @Argument(required = true, usage = "duration", metaVar = "duration", handler = SimplifiedDurationHandler.class)
     private Duration duration;
@@ -43,7 +40,7 @@ public final class Main {
         EventMessageFormatter formatter = new EventMessageFormatter();
         new TimeSlice()
             .inProgressEvery(inProgressPeriod)
-            .elapsesIn(elapsesIn.stream().map(t -> Duration.of(t, MINUTES)).collect(Collectors.toList()))
+            .elapsesIn(elapsesIn)
             .start(duration)
             .filter(event -> event.getType() != EventType.TICK)
             .doOnNext(new ConsoleNotifier(formatter, System.out))
