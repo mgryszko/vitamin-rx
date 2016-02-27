@@ -59,18 +59,18 @@ public class TimeSlice {
         @Override
         public Observable<Event> call(Duration t) {
             if (t.equals(Duration.ZERO)) {
-                return just(new Event(STARTING, duration));
+                return just(Event.of(STARTING, duration));
             }
             if (t.equals(duration)) {
-                return just(new Event(ELAPSED, duration));
+                return just(Event.of(ELAPSED, duration));
             }
             if (willElapseSoon(t)) {
-                return just(new Event(WILL_ELAPSE_SOON, timeToGo(t)));
+                return just(Event.of(WILL_ELAPSE_SOON, timeToGo(t)));
             }
             if (inProgress(t)) {
-                return just(new Event(IN_PROGRESS, t));
+                return just(Event.of(IN_PROGRESS, t));
             }
-            return just(new Event(TICK, t));
+            return just(Event.of(TICK, t));
         }
 
         private boolean willElapseSoon(Duration t) {

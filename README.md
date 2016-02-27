@@ -25,7 +25,7 @@ Actions:
 * Usage of some magic number/values to indicate not configured
 * Draw nice icon in Growl notification
 * Refactor tests
-* Hide constructor of Event
+* Tell, Don't Ask - pass formatter to event, and not event to formatter
 
 ## DONE
 

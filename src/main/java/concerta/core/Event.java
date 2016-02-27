@@ -7,9 +7,14 @@ public final class Event {
     private final EventType type;
     private final Duration duration;
 
-    public Event(EventType type, Duration duration) {
+    private Event(EventType type, Duration duration) {
         this.type = type;
         this.duration = duration;
+    }
+
+    @SuppressWarnings("StaticMethodNamingConvention")
+    public static Event of(EventType type, Duration duration) {
+        return new Event(type, duration);
     }
 
     public EventType getType() {

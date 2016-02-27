@@ -23,7 +23,7 @@ public class EventMessageFormatterTest {
     @Parameters(method = "supportedEventTypes")
     // TODO Replace with @Parameters(source = EventType.class) when all event types are supported
     public void formats_event_duration(EventType eventType) {
-        String message = formatter.message(new Event(eventType, Duration.parse("PT1M2S")));
+        String message = formatter.message(Event.of(eventType, Duration.parse("PT1M2S")));
 
         assertThat(message, Matchers.containsString("1:02"));
     }
