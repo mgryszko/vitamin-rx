@@ -28,10 +28,10 @@ public class ConsoleNotifier implements Action1<Event> {
     }
 
     private void classifyEvent(Event event) {
-        if (event.isTick()) {
-            lastTickEvent = event;
-        } else {
+        if (event.isMilestone()) {
             lastMilestoneEvent = event;
+        } else {
+            lastTickEvent = event;
         }
     }
 

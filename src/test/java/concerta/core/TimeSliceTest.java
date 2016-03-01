@@ -50,7 +50,7 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         scheduler.advanceTimeBy(2 * inProgressPeriod.toMinutes(), TimeUnit.MINUTES);
-        assertThat(allNonTickEvents(), contains(
+        assertThat(allMilestoneEvents(), contains(
             Event.of(STARTING, duration),
             Event.of(IN_PROGRESS, inProgressPeriod),
             Event.of(IN_PROGRESS, inProgressPeriod.multipliedBy(2))
@@ -63,7 +63,7 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
-        assertThat(allNonTickEvents(), contains(
+        assertThat(allMilestoneEvents(), contains(
             Event.of(STARTING, duration),
             Event.of(WILL_ELAPSE_SOON, Duration.of(5, MINUTES)),
             Event.of(WILL_ELAPSE_SOON, Duration.of(3, MINUTES)),
@@ -80,7 +80,7 @@ public class TimeSliceTest {
         return eventObserver.getOnNextEvents().stream().skip(eventObserver.getOnNextEvents().size() - n).collect(toList());
     }
 
-    private List<Event> allNonTickEvents() {
-        return eventObserver.getOnNextEvents().stream().filter(e -> !e.isTick()).collect(toList());
+    private List<Event> allMilestoneEvents() {
+        return eventObserver.getOnNextEvents().stream().filter(Event::isMilestone).collect(toList());
     }
 }

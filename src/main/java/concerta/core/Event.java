@@ -21,8 +21,8 @@ public final class Event {
         return new Event(type, duration);
     }
 
-    public boolean isTick() {
-        return type == EventType.TICK;
+    public boolean isMilestone() {
+        return type != EventType.TICK;
     }
 
     public String format(EventFormatter formatter) {

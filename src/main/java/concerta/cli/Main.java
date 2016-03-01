@@ -1,5 +1,6 @@
 package concerta.cli;
 
+import concerta.core.Event;
 import concerta.core.TimeSlice;
 import concerta.notification.ConsoleNotifier;
 import concerta.notification.EventMessageFormatter;
@@ -42,6 +43,7 @@ public final class Main {
             .elapsesIn(elapsesIn)
             .start(duration)
             .doOnNext(new ConsoleNotifier(formatter, System.out))
+            .filter(Event::isMilestone)
             .doOnNext(new GrowlNotifier(formatter, System.err))
             .subscribe();
     }
