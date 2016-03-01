@@ -1,6 +1,5 @@
 package concerta.cli;
 
-import concerta.core.EventType;
 import concerta.core.TimeSlice;
 import concerta.notification.ConsoleNotifier;
 import concerta.notification.EventMessageFormatter;
@@ -42,7 +41,6 @@ public final class Main {
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)
             .start(duration)
-            .filter(event -> event.getType() != EventType.TICK)
             .doOnNext(new ConsoleNotifier(formatter, System.out))
             .doOnNext(new GrowlNotifier(formatter, System.err))
             .subscribe();

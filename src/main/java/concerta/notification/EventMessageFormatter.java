@@ -14,11 +14,14 @@ public class EventMessageFormatter {
     private static final String H_MM = "%d:%02d";
 
     private Map<EventType, String> eventMessages = new EnumMap<>(EventType.class);
+
     public EventMessageFormatter() {
         fillMessages();
     }
 
     private void fillMessages() {
+        eventMessages.put(NULL, "");
+        eventMessages.put(TICK, H_MM);
         eventMessages.put(STARTING, "Starting time slice - " + H_MM);
         eventMessages.put(IN_PROGRESS,  H_MM + " left");
         eventMessages.put(WILL_ELAPSE_SOON, H_MM + " to go");

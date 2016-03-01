@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Objects;
 
 public final class Event {
+    public static final Event NULL = of(EventType.NULL, Duration.ZERO);
+
     private final EventType type;
     private final Duration duration;
 
@@ -23,6 +25,10 @@ public final class Event {
 
     public Duration getDuration() {
         return duration;
+    }
+
+    public boolean isTick() {
+        return type == EventType.TICK;
     }
 
     @Override
