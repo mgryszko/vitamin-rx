@@ -81,6 +81,6 @@ public class TimeSliceTest {
     }
 
     private List<Event> allNonTickEvents() {
-        return eventObserver.getOnNextEvents().stream().filter(e -> e.getType() != TICK).collect(toList());
+        return eventObserver.getOnNextEvents().stream().filter(e -> !e.isTick()).collect(toList());
     }
 }

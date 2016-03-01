@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static concerta.core.EventType.*;
 
-public class EventMessageFormatter {
+public class EventMessageFormatter implements EventFormatter {
     private static final int SECONDS_PER_MINUTE = 60;
     private static final String H_MM = "%d:%02d";
 
@@ -28,8 +28,9 @@ public class EventMessageFormatter {
         eventMessages.put(ELAPSED, "Time slice elapsed - " + H_MM);
     }
 
-    public String message(Event event) {
-        return formatDuration(eventMessages.get(event.getType()), event.getDuration());
+    @Override
+    public String format(EventType type, Duration duration) {
+        return formatDuration(eventMessages.get(type), duration);
     }
 
     private String formatDuration(String format, Duration duration) {

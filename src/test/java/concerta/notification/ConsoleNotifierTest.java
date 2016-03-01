@@ -1,6 +1,7 @@
 package concerta.notification;
 
 import concerta.core.Event;
+import concerta.core.EventType;
 import org.fusesource.jansi.Ansi;
 import org.junit.After;
 import org.junit.Before;
@@ -77,14 +78,14 @@ public class ConsoleNotifierTest {
         Ansi.setEnabled(ansiEnabled);
     }
 
-    private EventMessageFormatter formatter = new FakeEventMessageFormatter();
+    private EventFormatter formatter = new FakeEventMessageFormatter();
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
     private Action1<Event> notifier;
 
-    private static class FakeEventMessageFormatter extends EventMessageFormatter {
+    private static class FakeEventMessageFormatter implements EventFormatter {
         @Override
-        public String message(Event event) {
-            return event.equals(Event.NULL) ? "" : event.getType() + " " + event.getDuration();
+        public String format(EventType type, Duration duration) {
+            return type == NULL ? "" : type + " " + duration;
         }
     }
 }

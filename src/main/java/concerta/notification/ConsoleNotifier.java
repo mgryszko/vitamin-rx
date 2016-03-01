@@ -9,13 +9,13 @@ import java.io.PrintStream;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class ConsoleNotifier implements Action1<Event> {
-    private final EventMessageFormatter formatter;
+    private final EventFormatter formatter;
     private final PrintStream outStream;
 
     private Event lastTickEvent = Event.NULL;
     private Event lastMilestoneEvent = Event.NULL;
 
-    public ConsoleNotifier(EventMessageFormatter formatter, PrintStream outStream) {
+    public ConsoleNotifier(EventFormatter formatter, PrintStream outStream) {
         this.formatter = formatter;
         this.outStream = outStream;
     }
@@ -41,7 +41,7 @@ public class ConsoleNotifier implements Action1<Event> {
     }
 
     private void printLine() {
-        String line = formatter.message(lastTickEvent) + " " + formatter.message(lastMilestoneEvent);
+        String line = lastTickEvent.format(formatter) + " " + lastMilestoneEvent.format(formatter);
         outStream.println(line.trim());
     }
 }

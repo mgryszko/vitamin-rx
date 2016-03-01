@@ -1,5 +1,7 @@
 package concerta.core;
 
+import concerta.notification.EventFormatter;
+
 import java.time.Duration;
 import java.util.Objects;
 
@@ -19,16 +21,12 @@ public final class Event {
         return new Event(type, duration);
     }
 
-    public EventType getType() {
-        return type;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
     public boolean isTick() {
         return type == EventType.TICK;
+    }
+
+    public String format(EventFormatter formatter) {
+        return formatter.format(type, duration);
     }
 
     @Override

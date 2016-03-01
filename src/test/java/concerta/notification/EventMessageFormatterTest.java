@@ -23,7 +23,7 @@ public class EventMessageFormatterTest {
     @Test
     @Parameters(method = "supportedEventTypes")
     public void formats_event_duration(EventType eventType) {
-        String message = formatter.message(Event.of(eventType, Duration.parse("PT1M2S")));
+        String message = Event.of(eventType, Duration.parse("PT1M2S")).format(formatter);
 
         assertThat(message, containsString("1:02"));
     }
@@ -35,8 +35,8 @@ public class EventMessageFormatterTest {
 
     @Test
     public void returns_empty_string_for_null_events() {
-        assertThat(formatter.message(Event.NULL), equalTo(""));
+        assertThat(Event.NULL.format(formatter), equalTo(""));
     }
 
-    private EventMessageFormatter formatter = new EventMessageFormatter();
+    private EventFormatter formatter = new EventMessageFormatter();
 }

@@ -22,10 +22,10 @@ Actions:
 
 ### Technical
 
+* Don't display tick via Growl
 * Usage of some magic number/values to indicate not configured
 * Draw nice icon in Growl notification
 * Refactor tests
-* Tell, Don't Ask - pass formatter to event, and not event to formatter
 
 ## DONE
 
