@@ -15,15 +15,12 @@ Timed break events:
 
 Actions:
 
-* display elapsed time in minutes:seconds
 * play sound
 * speak
 * dim screen (only for has elapsed)
 
 ### Technical
 
-* Usage of some magic number/values to indicate not configured
-* Draw nice icon in Growl notification
 * Refactor tests
 
 ## DONE
@@ -38,3 +35,4 @@ Time slice events:
 Actions:
 
 * display CLI notification
+* display elapsed time in minutes:seconds

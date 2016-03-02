@@ -18,7 +18,7 @@ public class GrowlNotifier implements Action1<Event> {
     @Override
     public void call(Event event) {
         try {
-            new ProcessBuilder("growlnotify", "-m", event.format(formatter)).start();
+            new ProcessBuilder("growlnotify", "Time slice", "-m", event.format(formatter)).start();
         } catch (IOException e) {
             errorStream.println(e.getMessage());
         }
