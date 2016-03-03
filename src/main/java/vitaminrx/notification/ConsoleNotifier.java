@@ -1,6 +1,6 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.Event;
+import vitaminrx.core.Event;
 import org.fusesource.jansi.Ansi;
 import rx.functions.Action1;
 

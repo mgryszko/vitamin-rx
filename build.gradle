@@ -24,7 +24,7 @@ dependencies {
 }
 
 //noinspection GroovyUnusedAssignment
-mainClassName = 'concerta.cli.Main'
+mainClassName = 'vitaminrx.cli.Main'
 
 run {
     def execArgs = System.getProperty('exec.args')

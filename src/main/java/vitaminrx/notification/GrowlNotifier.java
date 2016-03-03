@@ -1,6 +1,6 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.Event;
+import vitaminrx.core.Event;
 import rx.functions.Action1;
 
 import java.io.IOException;

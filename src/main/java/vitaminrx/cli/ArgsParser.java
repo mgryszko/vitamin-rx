@@ -1,4 +1,4 @@
-package concerta.cli;
+package vitaminrx.cli;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;

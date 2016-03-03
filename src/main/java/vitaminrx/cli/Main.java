@@ -1,11 +1,11 @@
-package concerta.cli;
+package vitaminrx.cli;
 
-import concerta.core.Event;
-import concerta.core.TimeSlice;
-import concerta.notification.ConsoleNotifier;
-import concerta.notification.EventFormatter;
-import concerta.notification.EventMessageFormatter;
-import concerta.notification.GrowlNotifier;
+import vitaminrx.core.Event;
+import vitaminrx.core.TimeSlice;
+import vitaminrx.notification.ConsoleNotifier;
+import vitaminrx.notification.EventFormatter;
+import vitaminrx.notification.EventMessageFormatter;
+import vitaminrx.notification.GrowlNotifier;
 import org.fusesource.jansi.AnsiConsole;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;

@@ -1,6 +1,6 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.EventType;
+import vitaminrx.core.EventType;
 
 import java.time.Duration;
 

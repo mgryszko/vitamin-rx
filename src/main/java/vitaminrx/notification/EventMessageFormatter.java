@@ -1,13 +1,12 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.Event;
-import concerta.core.EventType;
+import vitaminrx.core.EventType;
 
 import java.time.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static concerta.core.EventType.*;
+import static vitaminrx.core.EventType.*;
 
 public class EventMessageFormatter implements EventFormatter {
     private static final int SECONDS_PER_MINUTE = 60;

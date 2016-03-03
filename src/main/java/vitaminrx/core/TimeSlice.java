@@ -1,4 +1,4 @@
-package concerta.core;
+package vitaminrx.core;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static concerta.core.EventType.*;
+import static vitaminrx.core.EventType.*;
 import static java.lang.Math.toIntExact;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Collections.emptyList;

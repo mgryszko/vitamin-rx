@@ -1,7 +1,7 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.Event;
-import concerta.core.EventType;
+import vitaminrx.core.Event;
+import vitaminrx.core.EventType;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static concerta.core.EventType.NULL;
+import static vitaminrx.core.EventType.NULL;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.containsString;
@@ -20,6 +20,8 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class EventMessageFormatterTest {
+    private EventFormatter formatter = new EventMessageFormatter();
+
     @Test
     @Parameters(method = "supportedEventTypes")
     public void formats_event_duration(EventType eventType) {
@@ -37,6 +39,4 @@ public class EventMessageFormatterTest {
     public void returns_empty_string_for_null_events() {
         assertThat(Event.NULL.format(formatter), equalTo(""));
     }
-
-    private EventFormatter formatter = new EventMessageFormatter();
 }

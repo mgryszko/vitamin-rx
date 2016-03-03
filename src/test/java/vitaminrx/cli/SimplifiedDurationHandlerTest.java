@@ -1,4 +1,4 @@
-package concerta.cli;
+package vitaminrx.cli;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -19,6 +19,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class SimplifiedDurationHandlerTest {
+    public static final String ARG_NAME = "ARG_NAME";
+    private DurationOption option = new DurationOption();
+    private DurationArgument argument = new DurationArgument();
+
     @Test
     @Parameters(method = "parseableOptions")
     public void parses_option_as_duration(String[] args, Duration expected) throws CmdLineException {
@@ -94,16 +98,10 @@ public class SimplifiedDurationHandlerTest {
         };
     }
 
-    private DurationOption option = new DurationOption();
-
     private static class DurationOption {
         @Option(name = "-d", aliases = "--duration", handler = SimplifiedDurationHandler.class)
         public Duration duration;
     }
-
-    private DurationArgument argument = new DurationArgument();
-
-    public static final String ARG_NAME = "ARG_NAME";
 
     public static class DurationArgument {
         @Argument(required = true, metaVar = ARG_NAME, handler = SimplifiedDurationHandler.class)

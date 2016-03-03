@@ -1,4 +1,4 @@
-package concerta.core;
+package vitaminrx.core;
 
 import org.junit.Test;
 import rx.Observable;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static concerta.core.EventType.*;
+import static vitaminrx.core.EventType.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;

@@ -1,7 +1,7 @@
-package concerta.notification;
+package vitaminrx.notification;
 
-import concerta.core.Event;
-import concerta.core.EventType;
+import vitaminrx.core.Event;
+import vitaminrx.core.EventType;
 import org.fusesource.jansi.Ansi;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import java.time.Duration;
 import java.util.List;
 
-import static concerta.core.EventType.*;
+import static vitaminrx.core.EventType.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
@@ -22,6 +22,11 @@ import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("resource")
 public class ConsoleNotifierTest {
+    private boolean ansiEnabled;
+    private EventFormatter formatter = new FakeEventMessageFormatter();
+    private ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private Action1<Event> notifier;
+
     @Test
     public void first_notified_event_can_be_a_tick() {
         notifier.call(Event.of(TICK, Duration.ZERO));
@@ -67,8 +72,6 @@ public class ConsoleNotifierTest {
         restoreAnsiSequences();
     }
 
-    private boolean ansiEnabled;
-
     private void disableAnsiSequences() {
         ansiEnabled = Ansi.isEnabled();
         Ansi.setEnabled(false);
@@ -77,10 +80,6 @@ public class ConsoleNotifierTest {
     private void restoreAnsiSequences() {
         Ansi.setEnabled(ansiEnabled);
     }
-
-    private EventFormatter formatter = new FakeEventMessageFormatter();
-    private ByteArrayOutputStream out = new ByteArrayOutputStream();
-    private Action1<Event> notifier;
 
     private static class FakeEventMessageFormatter implements EventFormatter {
         @Override
