@@ -3,6 +3,7 @@ package concerta.cli;
 import concerta.core.Event;
 import concerta.core.TimeSlice;
 import concerta.notification.ConsoleNotifier;
+import concerta.notification.EventFormatter;
 import concerta.notification.EventMessageFormatter;
 import concerta.notification.GrowlNotifier;
 import org.fusesource.jansi.AnsiConsole;
@@ -37,7 +38,7 @@ public final class Main {
         new ArgsParser(this, System.err).parse(args);
         AnsiConsole.systemInstall();
 
-        EventMessageFormatter formatter = new EventMessageFormatter();
+        EventFormatter formatter = new EventMessageFormatter();
         new TimeSlice()
             .inProgressEvery(inProgressPeriod)
             .elapsesIn(elapsesIn)

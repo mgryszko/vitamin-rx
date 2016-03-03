@@ -32,7 +32,6 @@ public class SimplifiedDurationHandler extends OneArgumentOptionHandler<Duration
         return Duration.of(Integer.valueOf(amount(matcher)), unit(matcher));
     }
 
-
     private CmdLineException misformattedArgumentException(String token) {
         return new CmdLineException(owner, Messages.ILLEGAL_OPERAND, option.toString(), token);
     }
