@@ -58,7 +58,7 @@ public class TimeSlice {
 
         @Override
         public Observable<Event> call(Duration t) {
-            Event tick = Event.of(TICK, t);
+            Event tick = Event.of(TICK, duration.minus(t));
             if (t.equals(Duration.ZERO)) {
                 return just(tick, Event.of(STARTING, duration));
             }

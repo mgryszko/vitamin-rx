@@ -7,8 +7,10 @@ import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -72,7 +74,7 @@ public class TimeSliceTest {
         timeSlice.subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
-        assertThat(allTickEvents(), equalTo(tickRange(Duration.ZERO, duration)));
+        assertThat(allTickEvents(), equalTo(tickSeq(duration, Duration.ZERO)));
     }
 
     private List<Event> allMilestoneEvents() {
@@ -87,9 +89,11 @@ public class TimeSliceTest {
         return eventObserver.getOnNextEvents().stream();
     }
 
-    private List<Event> tickRange(Duration first, Duration last) {
-        return rangeClosed(first.getSeconds(), last.getSeconds())
+    private List<Event> tickSeq(Duration last, Duration first) {
+        List<Event> events = rangeClosed(first.getSeconds(), last.getSeconds())
             .mapToObj(t -> Event.of(TICK, Duration.of(t, SECONDS)))
             .collect(toList());
+        Collections.reverse(events);
+        return events;
     }
 }
