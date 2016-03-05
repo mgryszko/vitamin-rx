@@ -58,19 +58,20 @@ public class TimeSlice {
 
         @Override
         public Observable<Event> call(Duration t) {
+            Event tick = Event.of(TICK, t);
             if (t.equals(Duration.ZERO)) {
-                return just(Event.of(STARTING, duration));
+                return just(tick, Event.of(STARTING, duration));
             }
             if (t.equals(duration)) {
-                return just(Event.of(ELAPSED, duration));
+                return just(tick, Event.of(ELAPSED, duration));
             }
             if (willElapseSoon(t)) {
-                return just(Event.of(WILL_ELAPSE_SOON, timeToGo(t)));
+                return just(tick, Event.of(WILL_ELAPSE_SOON, timeToGo(t)));
             }
             if (inProgress(t)) {
-                return just(Event.of(IN_PROGRESS, t));
+                return just(tick, Event.of(IN_PROGRESS, t));
             }
-            return just(Event.of(TICK, t));
+            return just(tick);
         }
 
         private boolean willElapseSoon(Duration t) {
@@ -82,10 +83,11 @@ public class TimeSlice {
         }
 
         private boolean inProgress(Duration t) {
-            if (inProgressPeriod.equals(Duration.ZERO)) {
-                return false;
-            }
-            return isMultipleOf(t, inProgressPeriod);
+            return isInProgressPeriodConfigured() && isMultipleOf(t, inProgressPeriod);
+        }
+
+        private boolean isInProgressPeriodConfigured() {
+            return !inProgressPeriod.equals(Duration.ZERO);
         }
 
         private boolean isMultipleOf(Duration d1, Duration d2) {

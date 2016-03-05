@@ -22,7 +22,11 @@ public final class Event {
     }
 
     public boolean isMilestone() {
-        return type != EventType.TICK;
+        return !isTick();
+    }
+
+    public boolean isTick() {
+        return type == EventType.TICK;
     }
 
     public String format(EventFormatter formatter) {

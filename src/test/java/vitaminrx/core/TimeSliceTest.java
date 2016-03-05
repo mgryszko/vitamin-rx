@@ -11,14 +11,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static vitaminrx.core.EventType.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.LongStream.rangeClosed;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static vitaminrx.core.EventType.*;
 
 public class TimeSliceTest {
     private final Duration duration = Duration.of(10, MINUTES);
@@ -30,18 +31,9 @@ public class TimeSliceTest {
         Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
         timeSlice.subscribe(eventObserver);
 
-        scheduler.advanceTimeBy(3, TimeUnit.SECONDS);
-        assertThat(eventObserver.getOnNextEvents(), equalTo(asList(
-            Event.of(STARTING, duration),
-            Event.of(TICK, Duration.of(1, SECONDS)),
-            Event.of(TICK, Duration.of(2, SECONDS)),
-            Event.of(TICK, Duration.of(3, SECONDS)))));
-
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
-        assertThat(lastEvents(4), equalTo(asList(
-            Event.of(TICK, duration.minusSeconds(3)),
-            Event.of(TICK, duration.minusSeconds(2)),
-            Event.of(TICK, duration.minusSeconds(1)),
+        assertThat(allMilestoneEvents(), equalTo(asList(
+            Event.of(STARTING, duration),
             Event.of(ELAPSED, duration))));
         eventObserver.assertCompleted();
     }
@@ -74,15 +66,30 @@ public class TimeSliceTest {
             Event.of(ELAPSED, duration)));
     }
 
-    private List<Event> lastEvents(int n) {
-        return observedEvents().skip(eventObserver.getOnNextEvents().size() - n).collect(toList());
+    @Test
+    public void tick_events() {
+        Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
+        timeSlice.subscribe(eventObserver);
+
+        scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
+        assertThat(allTickEvents(), equalTo(tickRange(Duration.ZERO, duration)));
     }
 
     private List<Event> allMilestoneEvents() {
         return observedEvents().filter(Event::isMilestone).collect(toList());
     }
 
+    private List<Event> allTickEvents() {
+        return observedEvents().filter(Event::isTick).collect(toList());
+    }
+
     private Stream<Event> observedEvents() {
         return eventObserver.getOnNextEvents().stream();
+    }
+
+    private List<Event> tickRange(Duration first, Duration last) {
+        return rangeClosed(first.getSeconds(), last.getSeconds())
+            .mapToObj(t -> Event.of(TICK, Duration.of(t, SECONDS)))
+            .collect(toList());
     }
 }
