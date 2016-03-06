@@ -1,5 +1,7 @@
 package vitaminrx.cli;
 
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 import vitaminrx.core.Event;
 import vitaminrx.core.TimeSlice;
 import vitaminrx.notification.ConsoleNotifier;
@@ -10,6 +12,9 @@ import org.fusesource.jansi.AnsiConsole;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +44,21 @@ public final class Main {
         AnsiConsole.systemInstall();
 
         EventFormatter formatter = new EventMessageFormatter();
-        new TimeSlice()
+        Scheduler scheduler = Schedulers.newThread();
+        TimeSlice timeSlice = new TimeSlice(scheduler)
             .inProgressEvery(inProgressPeriod)
-            .elapsesIn(elapsesIn)
-            .start(duration)
+            .elapsesIn(elapsesIn);
+        timeSlice.start(duration)
             .doOnNext(new ConsoleNotifier(formatter, System.out))
             .filter(Event::isMilestone)
             .doOnNext(new GrowlNotifier(formatter, System.err))
             .subscribe();
+
+        // TODO Tests work, CLI doesn't
+        try {
+            new Console(new KeyReceiver(timeSlice)).read(new InputStreamReader(System.in, Charset.forName("UTF-8")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

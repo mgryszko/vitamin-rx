@@ -9,18 +9,21 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static vitaminrx.core.EventType.*;
-import static java.lang.Math.toIntExact;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Collections.emptyList;
 import static rx.Observable.interval;
 import static rx.Observable.just;
+import static vitaminrx.core.EventType.*;
 
 public class TimeSlice {
     private Scheduler scheduler = Schedulers.immediate();
     private Duration inProgressPeriod = Duration.ZERO;
     private List<Duration> elapsesIn = emptyList();
+    private final AtomicLong counter = new AtomicLong();
+    private final AtomicBoolean paused = new AtomicBoolean();
 
     public TimeSlice() {
     }
@@ -40,13 +43,19 @@ public class TimeSlice {
     }
 
     public Observable<Event> start(Duration duration) {
-        return everyOneUnitUpTo(duration).concatMap(new ToEvent(duration));
+        return pausableInterval()
+            .map(t -> Duration.of(counter.getAndIncrement(), SECONDS))
+            .takeUntil(t -> t.equals(duration))
+            .concatMap(new ToEvent(duration));
     }
 
-    private Observable<Duration> everyOneUnitUpTo(Duration duration) {
+    private Observable<Long> pausableInterval() {
         return interval(0, 1, TimeUnit.SECONDS, scheduler)
-            .map(t -> Duration.of(t, SECONDS))
-            .take(toIntExact(duration.getSeconds() + 1));
+            .filter(t -> !paused.get());
+    }
+
+    public void toggle() {
+        paused.set(!paused.get());
     }
 
     private final class ToEvent implements Func1<Duration, Observable<Event>>  {

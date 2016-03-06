@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class ConsoleNotifier implements Action1<Event> {
+    private static final int MAX_TO_LEFT = 999;
     private final EventFormatter formatter;
     private final PrintStream outStream;
 
@@ -36,7 +37,7 @@ public class ConsoleNotifier implements Action1<Event> {
     }
 
     private void deleteCurrentLine() {
-        outStream.print(ansi().cursorLeft(999).cursorUp(1).eraseLine(Ansi.Erase.ALL));
+        outStream.print(ansi().cursorLeft(MAX_TO_LEFT).cursorUp(1).eraseLine(Ansi.Erase.ALL));
         outStream.flush();
     }
 

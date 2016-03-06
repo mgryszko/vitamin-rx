@@ -1,7 +1,6 @@
 package vitaminrx.core;
 
 import org.junit.Test;
-import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
@@ -10,7 +9,6 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -30,8 +28,7 @@ public class TimeSliceTest {
 
     @Test
     public void elapse_time_slice_start_end_events() {
-        Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
-        timeSlice.subscribe(eventObserver);
+        new TimeSlice(scheduler).start(duration).subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
         assertThat(allMilestoneEvents(), equalTo(asList(
@@ -43,8 +40,7 @@ public class TimeSliceTest {
     @Test
     public void in_progress_events_of_time_slice() {
         Duration inProgressPeriod = Duration.of(2, MINUTES);
-        Observable<Event> timeSlice = new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration);
-        timeSlice.subscribe(eventObserver);
+        new TimeSlice(scheduler).inProgressEvery(inProgressPeriod).start(duration).subscribe(eventObserver);
 
         scheduler.advanceTimeBy(2 * inProgressPeriod.toMinutes(), TimeUnit.MINUTES);
         assertThat(allMilestoneEvents(), contains(
@@ -56,8 +52,7 @@ public class TimeSliceTest {
     @Test
     public void will_elapse_soon_events_before_time_slice_end() {
         List<Duration> times = asList(Duration.of(5, MINUTES), Duration.of(3, MINUTES), Duration.of(1, MINUTES));
-        Observable<Event> timeSlice = new TimeSlice(scheduler).elapsesIn(times).start(duration);
-        timeSlice.subscribe(eventObserver);
+        new TimeSlice(scheduler).elapsesIn(times).start(duration).subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
         assertThat(allMilestoneEvents(), contains(
@@ -70,11 +65,27 @@ public class TimeSliceTest {
 
     @Test
     public void tick_events() {
-        Observable<Event> timeSlice = new TimeSlice(scheduler).start(duration);
-        timeSlice.subscribe(eventObserver);
+        new TimeSlice(scheduler).start(duration).subscribe(eventObserver);
 
         scheduler.advanceTimeBy(duration.toMinutes(), TimeUnit.MINUTES);
         assertThat(allTickEvents(), equalTo(tickSeq(duration, Duration.ZERO)));
+    }
+
+    @Test
+    public void can_be_paused_and_resumed() {
+        TimeSlice timeSlice = new TimeSlice(scheduler);
+        timeSlice.start(duration).subscribe(eventObserver);
+
+        scheduler.advanceTimeBy(1, TimeUnit.MINUTES);
+        timeSlice.toggle();
+        scheduler.advanceTimeBy(1, TimeUnit.MINUTES);
+
+        assertThat(allTickEvents(), equalTo(tickSeq(duration, duration.minus(Duration.of(1, MINUTES)))));
+
+        timeSlice.toggle();
+        scheduler.advanceTimeBy(1, TimeUnit.MINUTES);
+
+        assertThat(allTickEvents(), equalTo(tickSeq(duration, duration.minus(Duration.of(2, MINUTES)))));
     }
 
     private List<Event> allMilestoneEvents() {
