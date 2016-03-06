@@ -26,6 +26,10 @@ dependencies {
 //noinspection GroovyUnusedAssignment
 mainClassName = 'vitaminrx.cli.Main'
 
+shadowJar {
+    baseName = 'vitamin-rx'
+}
+
 run {
     def execArgs = System.getProperty('exec.args')
     if (execArgs) args execArgs.split()
