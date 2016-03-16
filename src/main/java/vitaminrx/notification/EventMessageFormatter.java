@@ -22,7 +22,7 @@ public class EventMessageFormatter implements EventFormatter {
         eventMessages.put(NULL, "");
         eventMessages.put(TICK, H_MM);
         eventMessages.put(STARTING, "Starting time slice - " + H_MM);
-        eventMessages.put(IN_PROGRESS,  H_MM + " left");
+        eventMessages.put(IN_PROGRESS, H_MM + " elapsed");
         eventMessages.put(WILL_ELAPSE_SOON, H_MM + " to go");
         eventMessages.put(ELAPSED, "Time slice elapsed - " + H_MM);
     }
