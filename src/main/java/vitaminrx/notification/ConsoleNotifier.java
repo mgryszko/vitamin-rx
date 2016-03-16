@@ -36,7 +36,7 @@ public class ConsoleNotifier implements Action1<Event> {
     }
 
     private void deleteCurrentLine() {
-        outStream.print(ansi().cursorUp(1).eraseLine(Ansi.Erase.ALL));
+        outStream.print(ansi().cursorLeft(999).cursorUp(1).eraseLine(Ansi.Erase.ALL));
         outStream.flush();
     }
 
