@@ -57,4 +57,6 @@ For testing I used `rx.schedulers.TestScheduler`, which allows you to play with 
 
 ## Further extensions
 
-I played a bit with pausing an interval `Observable`, but finally I didn't make the code "production" ready. You can find the sketch of the solution on [Stack Overflow](http://stackoverflow.com/questions/35782767/how-can-an-observable-be-paused-without-loosing-the-items-emitted).
+I played a bit with pausing an interval `Observable`. I followed the solution from [Stack Overflow](http://stackoverflow.com/questions/35782767/how-can-an-observable-be-paused-without-loosing-the-items-emitted). You can find the code in the `pause-resume` branch.
+
+What I didn't like was the interaction with the console via the `System.in`. Each command (for pausing, resuming and quit) must be confirmed with a press of enter. I didn't find a solution that allowed the direct binding of keys (like space or enter) to actions without emitting anything to the console.
